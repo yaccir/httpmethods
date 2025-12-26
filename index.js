@@ -2,18 +2,24 @@ const express=require('express');
 
 const app=express();
 
-const port=5081;
+const port=8081;
+app.listen(port,()=>{
+    console.log(`server is running at port: ${port}`);
+})
+
+app.use(express.json());
+
 
 const users=[
-    {id: "1",
+    {id: 1,
 firstName: "Anshika",
 lastName: "Agarwal",
 hobby:"Teaching"},
-    {id: "2",
+    {id: 2,
 firstName: "Ritik",
 lastName: "Agarwal",            
 hobby:"Travelling"},
-    {id: "3",
+    {id: 3,
 firstName: "Ankit",
 lastName: "Agarwal",            
 hobby:"Reading"},
@@ -23,68 +29,145 @@ hobby:"Reading"},
   
 ];
 
-app.listen(port,()=>{
-    console.log(`server is running at port: ${port}`);
-})
-
-app.get("/",(req,res)=>{
-  
-    
-})
-
-app.get("/users",(req,res)=>{
-        res.send(users);
-})
-
-
-app.get("/users/:id",(req,res)=>{
-const id=req.params.id;
-// const user=users.find((usr)=>usr.id===id);
-// res.send(user);
-users.forEach((user)=>{
-    if(user.id==id)
-        res.send(user);
-})
-
+app.use((req, res, next) => {
+    console.log(
+        `Method: ${req.method}, 
+        URL: ${req.originalUrl}, 
+        Status: ${res.statusCode}
+        ip:${req.ip},
+        Time: ${new Date().toISOString()}, 
+        `
+    );
+    next();
 });
 
 
 
+app.get("/",(req,res)=>{
+    console.log("Home page accessed")
+    res.status(200).send("Welcome to the Home page");
+  
+    
+})
 
 
-app.post("/user",(req,res)=>{
-    user.push(req.body);
-    res.send("user added successfully");
+//logic for get method
+app.get("/users",(req,res)=>{
+    try{
+        console.log("User list accessed")
+        return res.status(200).json(users)
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message})
+    }
+        
+})
+
+//logic for get method by id
+app.get("/user/:id",(req,res)=>{
+
+    try{
+        const id=req.params.id;
+        const user =users.find((user)=> id==user.id) 
+        if(!user)
+            return res.status(404).json("user not found");
+        else
+        return res.status(200).json(user)
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message})
+    }
+    
+
+})
+
+//middleware for post method
+
+function validation(req,res,next)
+{
+ const{firstName,lastName,hobby}=req.body;
+if(!firstName){
+    return res.status(400).json("First name is required");
+}
+else  if(!lastName){
+    return res.status(400).json("Last name is required");
+} else  if(!hobby){
+    return res.status(400).json("Hobby is required");
+}
+
+ next();
+
+}
+
+// logic for post method
+
+app.post("/user",validation,(req,res)=>{
+
+    try{
+        req.body={...req.body,id:`${Math.floor(Math.random()*1000)}`};
+        users.push(req.body);
+        res.status(201).json("user added successfully");
+    }
+
+    catch(err)
+    {
+        res.status(500).json({message:err.message})
+    }
+    
 })
 
 
 
-app.put("/user/:id",()=>{
+//logic for put method to change the entire object
+
+app.put("/user/:id",validation,(req,res)=>{
    
-    const id=req.params.id;
-    users.forEach(()=>{
-        if(user.id==id)
+
+    try{
+            const id=req.params.id;
+
+          const index=  users.findIndex((user)=>user.id==id)
+
+
+        if(index==-1)
+            return res.status(404).json("user not found");
+        else
         {
-            user.firstName=req.body.firstName;
-            user.lastName=req.body.lastName;
-            user.hobby=req.body.hobby;
-            res.send("user details updated successfully");
+            users[index]={id:id,...req.body};
+            res.status(200).json("user details updated successfully");
         }
-    })
+            
+    }
+    catch(err){
+      return   res.status(500).json({message:err.message})
+    }
+
 
 })
+
+//logic for delete method
 
 app.delete("/user/:id",(req,res)=>{
 
-    const id=req.params.id;
+try{
 
-    users.forEach((user)=>{
-        if(user.id==id)
-        {
-            const index=users.indexOf(user);
-            users.splice(index,1);
-            res.send("user deleted successfully");
-        }
-    
-        })
+       const id=req.params.id;
+
+
+       const index= users.find((user)=>id==user.id)
+       if (index=-1)
+        return res.status(404).json("user not found");
+    else{
+       users.splice(index,1);
+       res.status(200).json("user deleted successfully");
+    }
+
+
+}
+catch(err){
+   return  res.status(500).json({message:err.message}) 
+}
+ 
 })
