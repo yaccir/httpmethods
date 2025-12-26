@@ -1,0 +1,130 @@
+# RESTful API using Node.js and Express
+
+This repository contains a **RESTful API** built using **Node.js** and **Express.js** as part of **Module 2 Assignment: Build a RESTful API using Node.js**. The project demonstrates core backend concepts such as routing, middleware, HTTP methods, status codes, validation, and error handling using an in-memory data source.
+
+GitHub Repository: [https://github.com/yaccir/httpmethods](https://github.com/yaccir/httpmethods)
+
+---
+
+## 🎯 Assignment Objective
+
+To create a simple RESTful API for managing a list of users while testing the following concepts:
+
+* Express routing
+* HTTP methods (GET, POST, PUT, DELETE)
+* Middleware usage
+* Request validation
+* Error handling with proper status codes
+* In-memory data storage
+
+---
+
+## 🛠️ Technologies Used
+
+* Node.js
+* Express.js
+* JavaScript (ES6)
+* Postman / Thunder Client (for API testing)
+
+---
+
+## 📁 Project Setup
+
+### 1. Initialize Node.js Project
+
+```bash
+npm init -y
+npm install express
+```
+
+### 2. Run the Server
+
+```bash
+node index.js
+```
+
+Server runs on the configured port (e.g., `http://localhost:8086`).
+
+---
+
+## 📌 API Routes
+
+### User Object Structure
+
+```json
+{
+  "id": "1",
+  "firstName": "Anshika",
+  "lastName": "Agarwal",
+  "hobby": "Teaching"
+}
+```
+
+### Available Endpoints
+
+| Method | Endpoint   | Description             |
+| ------ | ---------- | ----------------------- |
+| GET    | /users     | Fetch all users         |
+| GET    | /users/:id | Fetch user by ID        |
+| POST   | /user      | Add a new user          |
+| PUT    | /user/:id  | Update an existing user |
+| DELETE | /user/:id  | Delete a user by ID     |
+
+---
+
+## 🧩 Middleware Implementation
+
+### 1. Logging Middleware
+
+* Logs request method, URL, and response status code for every request.
+
+### 2. Validation Middleware
+
+* Validates required fields (`firstName`, `lastName`, `hobby`) for **POST** and **PUT** requests.
+* Returns `400 Bad Request` if validation fails.
+
+---
+
+## ⚠️ Error Handling
+
+The API handles errors gracefully and returns meaningful responses:
+
+* `200 OK` – Successful request
+* `201 Created` – Resource created successfully
+* `400 Bad Request` – Invalid or missing input data
+* `404 Not Found` – User not found
+* `500 Internal Server Error` – Server-side error
+
+---
+
+## 🗄️ Data Source
+
+* User data is stored **in-memory** using a JavaScript array.
+* No external database is used, as per assignment requirements.
+
+---
+
+## 🧪 API Testing
+
+* All endpoints were tested using **Postman / Thunder Client**.
+* Screenshots of test results are included separately as required for submission.
+
+---
+
+## 📝 Code Documentation
+
+* Clear and meaningful comments are added throughout the code to explain the logic and flow.
+
+---
+
+## 👤 Author
+
+**Yasir**
+B.Tech Software Engineer
+GitHub: [https://github.com/yaccir](https://github.com/yaccir)
+
+---
+
+## 📄 License
+
+This project is created for **educational and assignment purposes only**.
