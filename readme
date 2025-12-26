@@ -6,6 +6,8 @@ GitHub Repository: [https://github.com/yaccir/httpmethods](https://github.com/ya
 
 ---
 
+run the command npm i first
+
 ## 🎯 Assignment Objective
 
 To create a simple RESTful API for managing a list of users while testing the following concepts:
