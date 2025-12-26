@@ -2,7 +2,7 @@ const express=require('express');
 
 const app=express();
 
-const port=8081;
+const port=8086;
 app.listen(port,()=>{
     console.log(`server is running at port: ${port}`);
 })
@@ -65,7 +65,7 @@ app.get("/users",(req,res)=>{
 })
 
 //logic for get method by id
-app.get("/user/:id",(req,res)=>{
+app.get("/users/:id",(req,res)=>{
 
     try{
         const id=req.params.id;
@@ -87,7 +87,16 @@ app.get("/user/:id",(req,res)=>{
 
 function validation(req,res,next)
 {
- const{firstName,lastName,hobby}=req.body;
+ const{id,firstName,lastName,hobby}=req.body;
+if(!id){
+    return res.status(400).json("Id is required");
+}
+const idexists=users.find((user)=>user.id==id)
+if(idexists && req.method==="POST")
+{
+    return res.status (400).json("Id already exists");
+    
+}
 if(!firstName){
     return res.status(400).json("First name is required");
 }
@@ -106,7 +115,6 @@ else  if(!lastName){
 app.post("/user",validation,(req,res)=>{
 
     try{
-        req.body={...req.body,id:`${Math.floor(Math.random()*1000)}`};
         users.push(req.body);
         res.status(201).json("user added successfully");
     }
@@ -156,9 +164,9 @@ try{
        const id=req.params.id;
 
 
-       const index= users.find((user)=>id==user.id)
-       if (index=-1)
-        return res.status(404).json("user not found");
+       const index= users.findIndex((user)=>id==user.id)
+       if (index==-1)
+        return res.status(404).json("message : user not found");
     else{
        users.splice(index,1);
        res.status(200).json("user deleted successfully");
